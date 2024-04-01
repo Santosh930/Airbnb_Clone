@@ -59,6 +59,11 @@
    
      
    
+   "cloudinary": "^2.1.0",
+  
+   
+     
+   
    "connect-flash": "^0.1.1",
   
    
