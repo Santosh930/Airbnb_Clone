@@ -1,7 +1,7 @@
 <% layout('/layouts/boilerplate') %>
 <script>
   const mapToken="<%= process.env.MAP_TOKEN %>";
-  // const coordinates = <%-listing.geometry.coordinates %>;
+  const coordinates = <%- JSON.stringify(listing.geometry.coordinates) %>
 
 </script>
 <body>
@@ -14,7 +14,7 @@
         <img src="<%= listing.image.url %>" class="card-img-top show-img my-2" alt="<%= listing.title %>">
         <div class="card-body">
           <p class="card-text">
-            <h1> Owned By &nbsp;<%= listing.owner.username %></h1>
+            <i> Owned By &nbsp;<%= listing.owner.username %></i>
            <p> <%= listing.title %> </p>
             <p><%= listing.description %> </p>
             <p> &#8377;<%= listing.price.toLocaleString() %> </p>
@@ -25,7 +25,7 @@
         </div>
       </div>
 
-     
+     <% if(currUser && currUser._id.equals(listing.owner._id)){ %>
       <div    style="display: flex;">
         <div>
             <a  class="btn btn-success px-4 me-2" href="/listings/<%= listing._id %>/edit">Edit</a>
@@ -35,9 +35,11 @@
         <button class="btn btn-success px-3"  >Delete</button>
     </form>
       </div>
+      <% } %>
 
         </div>
     </div>
+    <% if(currUser){ %>
     <div class="row mb-2">
       <div class="col-8 offset-2">
         <hr>
@@ -78,7 +80,7 @@
           <% for(review of listing.reviews){ %>
             <div class="card col-5 m-3 p-2 review">
               <div class="card-body ">
-                <h5 class="card-title">Santosh Kumar</h5>
+                <h5 class="card-title">@<%= review.author.username %></h5>
                 
                 <p class="starability-result card-text " data-rating="<%= review.rating %>">
                   
@@ -96,6 +98,7 @@
           <% } %>
           
       </div>
+      <% } %>
       <div class="col-6 offset-2 mb-3" >
         <h3>where you'll be!</h3>
         <div id="map"></div>
@@ -103,6 +106,7 @@
       </div>
       
  </div>
+ 
  
         
 
@@ -115,6 +119,6 @@
         
     
          
-  <script src="/js/map.js"></script>
+  <script src="/js/map1.js"></script>
     
 </body>

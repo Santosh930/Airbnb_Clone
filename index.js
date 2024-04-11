@@ -7,9 +7,20 @@ require('dotenv').config()
 const express=require('express');
 const mongoose=require('mongoose');
 const wrapAsync=require('./utils/wrapAsync.js');
-// const MONGO_URL="mongodb://127.0.0.1:27017/Airbnb-2";
+const MONGO_URL="mongodb://127.0.0.1:27017/Airbnb-2";
 const dbUrl=process.env.ATLASDB_URL;
 const app=express();
+//for using another method except get & post
+const methodOverride=require('method-override');
+app.use(methodOverride('_method'));
+
+//for applying css
+app.use(express.static('public'));
+
+//for ejs-mate template
+const ejsMate=require('ejs-mate');
+
+app.engine('ejs',ejsMate);
 
 
 const flash=require('connect-flash');
@@ -23,15 +34,13 @@ main().then(()=>{
     console.log(err);
 })
 async function main(){
-    mongoose.connect(dbUrl);
+    mongoose.connect(MONGO_URL);
 
 }
 //expressError
 const ExpressError=require('./utils/ExpressError.js');
 
-//for using another method except get & post
-const methodOverride=require('method-override');
-app.use(methodOverride('_method'));
+
 app.use(express.urlencoded({extended:true}));
 //for apply express-session
 const  session=require('express-session');
@@ -64,20 +73,8 @@ app.use(session(sessionOptions));
 //for connect-flash message
 
 app.use(flash());
-app.use((req,res,next)=>{
 
-    
-    
-    // console.log(res.locals.currUser,'Inside middleware');
-    // console.log(req.user,'Inside middleware');
-    // console.log(req.session.passport);
 
-    res.locals.success=req.flash("success");
-    res.locals.error=req.flash("error");
-    res.locals.curruser=req.session.passport;
-   
-    next();
-});
 //home route
 app.get('/',wrapAsync((req,res)=>{
     
@@ -85,6 +82,8 @@ app.get('/',wrapAsync((req,res)=>{
     res.render("./listings/home.ejs");
     
 }));
+
+
 
 //for signup/login using passport
 const passport=require('passport');
@@ -95,6 +94,22 @@ app.use(passport.session());//session
 passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
+//applying middleware for res.locals variable
+app.use((req,res,next)=>{
+
+    
+    
+    // console.log(res.locals.currUser,'Inside middleware');
+    // console.log(req.user,'Inside middleware');
+    // console.log(req.session.passport);
+
+    res.locals.success=req.flash("success");
+    res.locals.error=req.flash("error");
+    res.locals.currUser=req.user;
+   
+    next();
+});
+
 // app.get('/demouser',async(req,res)=>{
 //     let fakeUser=new User({
 //         email:'raman@gmail.com',
@@ -116,13 +131,7 @@ app.use('/listings',listingRouter);
 const reviewRouter=require('./routes/review.js');
 app.use('/listings/:id/reviews',reviewRouter);
 
-//for applying css
-app.use(express.static('public'));
 
-//for ejs-mate template
-const ejsMate=require('ejs-mate');
-
-app.engine('ejs',ejsMate);
 
 //inserting sample data in db...
 
