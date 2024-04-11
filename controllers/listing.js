@@ -49,7 +49,6 @@ module.exports.createListing = async (req, res) => {
   // console.log(response.body.features[0].geometry);
   // res.send('done');
 
-<<<<<<< HEAD
   const url = req.file.path;
   const filename = req.file.filename;
   // console.log(url);
@@ -57,48 +56,6 @@ module.exports.createListing = async (req, res) => {
   const newListing = new Listing(req.body.listing);
   //   if(!newListing.title){
   //         throw new ExpressError(400,'title is missing!');
-=======
-module.exports.createListing=async (req,res)=>{
-   let response= await geocodingClient.forwardGeocode({
-        query:req.body.listing.location,
-        limit: 1
-      })
-        .send();
-        // console.log(response.body.features[0].geometry.coordinates);
-        // res.send('done');
-        
-    const url=req.file.path;
-    const filename=req.file.filename;
-    // console.log(url);
-    // console.log(filename);
-    const newListing=new Listing(req.body.listing);
-    //   if(!newListing.title){
-    //         throw new ExpressError(400,'title is missing!');
-    
-    //     }
-    //     if(!newListing.price){
-    //         throw new ExpressError(400,'price is missing!');
-    
-    //     }
-    //     if(!newListing.location){
-    //         throw new ExpressError(400,'location is missing!');
-    
-    //     }
-    //     if(!newListing.description){
-    //         throw new ExpressError(400,'description is missing!');
-    
-    //     }
-    newListing.owner=req.user._id;
-    newListing.image={url,filename};
-    newListing.geometry=response.body.features[0].geometry;
-    let savedListing=await newListing.save();
-    console.log(savedListing);
-    // console.log(savedListing);
-    // apply flash
-    req.flash('success','New Listing Created Successfully!');
-   // console.log(newListing);
-    res.redirect('/listings');
->>>>>>> 85b95ffa76c1e3ce0c5f40b531421888b47e9c95
 
   //     }
   //     if(!newListing.price){
