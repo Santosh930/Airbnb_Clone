@@ -38,7 +38,7 @@ main().then(()=>{
     console.log(err);
 })
 async function main(){
-    mongoose.connect(MONGO_URL);
+    mongoose.connect(dbUrl);
 
 }
 //expressError
